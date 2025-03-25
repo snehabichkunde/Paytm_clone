@@ -4,6 +4,8 @@ const {User} = require('../db/db');
 const jwt = require("jsonwebtoken")
 const router = express.Router();
 const {JWT_SECRET} = require('../config');
+const bcrypt = require('bcryptjs');
+
 
 // sign up and sing in routes 
 
@@ -27,12 +29,14 @@ router.post('/signup', async (req, res) => {
         return res.status(400).json({ message: "Email already taken" });
     }
 
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
 
     const user = await User.create({
         username : req.body.username,
         firstname : req.body.firstname,
         lastname : req.body.lastname,
-        password : req.body.password
+        password : hashedPassword
     });
 
     // get the id
