@@ -1,15 +1,12 @@
 const mongoose = require('mongoose');
 
-mongoose.connect("mongodb://localhost:27017/paytm", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-}).then(() => {
+mongoose.connect("mongodb://localhost:27017/paytm").then(() => {
     console.log("Connected to MongoDB successfully!");
 }).catch((error) => {
     console.error("MongoDB connection failed:", error);
 });
 
-const userSchema = mongoose.Schema({
+const userSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true,
@@ -24,13 +21,13 @@ const userSchema = mongoose.Schema({
         required: true,
         minLength: 6
     },
-    firstname: {
+    firstName: {  
         type: String,
         required: true,
         trim: true,
         maxLength: 50
     },
-    lastname: {
+    lastName: {  
         type: String,
         required: true,
         trim: true,
@@ -40,7 +37,7 @@ const userSchema = mongoose.Schema({
 
 const accountSchema = new mongoose.Schema({
     userId: {
-        type: mongoose.Schema.Types.ObjectId, // Reference to User model
+        type: mongoose.Schema.Types.ObjectId, 
         ref: 'User',
         required: true
     },
@@ -53,7 +50,4 @@ const accountSchema = new mongoose.Schema({
 const Account = mongoose.model('Account', accountSchema);
 const User = mongoose.model('User', userSchema);
 
-module.exports = {
-    User, 
-    Account
-};
+module.exports = { User, Account };

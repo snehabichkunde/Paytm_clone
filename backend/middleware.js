@@ -1,23 +1,16 @@
-const { JWT_SECRET } = require("./config");
-const jwt = require("jsonwebtoken");
-
-const authMiddleware = (req, res, next) => {
-    // Extract token from the Authorization header
-    const token = req.header("Authorization");
-
-    // Check if token is provided
+function authMiddleware(req, res, next) {
+    console.log("authMiddleware is running"); // Debugging
+    const token = req.headers.authorization;
     if (!token) {
-        return res.status(401).json({ message: "Access denied. No token provided." });
+        return res.status(403).json({ message: "Unauthorized" });
     }
-
     try {
-        // Verify token
-        const decoded = jwt.verify(token.replace("Bearer ", ""), JWT_SECRET);
-        req.userID = decoded.userID; // Attach userID to request
-        next(); // Move to the next middleware
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.userId = decoded.userId;
+        next();
     } catch (err) {
         return res.status(403).json({ message: "Invalid token" });
     }
-};
+}
 
-module.exports = authMiddleware;
+module.exports = { authMiddleware };
