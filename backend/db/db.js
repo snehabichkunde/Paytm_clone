@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 
-mongoose.connect("mongodb+srv://bichkundesneha:B4N7l1cZ8Ywo6Lod@cluster0.igjna.mongodb.net/paytm").then(() => {
+const { MONGODB_URI } = require('../config'); 
+
+mongoose.connect(MONGODB_URI).then(() => {
     console.log("Connected to MongoDB successfully!");
 }).catch((error) => {
     console.error("MongoDB connection failed:", error);

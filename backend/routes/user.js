@@ -114,6 +114,23 @@ router.put("/", authMiddleware, async (req, res) => {
     });
 });
 
+router.get("/me", authMiddleware, async (req, res) => {
+    try {
+        const user = await User.findById(req.userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.json({
+            firstName: user.firstName,
+            lastName: user.lastName,
+            username: user.username
+        });
+    } catch (err) {
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
 router.get("/bulk", async (req, res) => {
     const filter = req.query.filter || "";
 
