@@ -122,6 +122,7 @@ router.get("/me", authMiddleware, async (req, res) => {
         }
 
         res.json({
+            _id: user._id,  
             firstName: user.firstName,
             lastName: user.lastName,
             username: user.username

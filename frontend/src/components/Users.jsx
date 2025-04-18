@@ -6,6 +6,25 @@ import { useNavigate } from "react-router-dom";
 export const Users = () => {
     const [users, setUsers] = useState([]);
     const [filter, setFilter] = useState("");
+    const [currentUserId, setCurrentUserId] = useState(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                const response = await axios.get("http://localhost:3000/api/v1/user/me", {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                setCurrentUserId(response.data._id);
+            } catch (error) {
+                console.error("Failed to load user info", error);
+            }
+        };
+
+        fetchUser();
+    }, []);
 
     useEffect(() => {
         axios.get("http://localhost:3000/api/v1/user/bulk?filter=" + filter)
@@ -30,7 +49,9 @@ export const Users = () => {
                 />
             </div>
             <div>
-                {users.map(user => (
+                {users
+                .filter(user => user._id !== currentUserId)
+                .map(user => (
                     <User key={user._id} user={user} />
                 ))}
             </div>
